@@ -1,0 +1,36 @@
+.sidenav-container {
+  height: 100%;
+  background-color: rgb(222, 218, 218);
+}
+
+.sidenav {
+  width: 140px;
+  @apply bg-primary;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+
+.itemSide {
+  color: #c1c1c1;
+  font-weight: 500;
+  font-size: 14px;
+}
+.activeLink {
+  color: white;
+  border-left: white 3px solid;
+}
+.listItemContent {
+  display: flex !important;
+  align-items: center;
+  flex-direction: row !important;
+  gap: 10px !important;
+}

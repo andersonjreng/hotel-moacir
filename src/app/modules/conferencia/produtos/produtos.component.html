@@ -1,0 +1,260 @@
+<div class="title-page" [ngClass]="{ 'title-mobile': isMobile }">
+  <mat-icon class="mat-18" style="margin-top: 3px; margin-right: 5px;">shopping_cart</mat-icon><h1>Produtos</h1>
+</div>
+
+<div class="pesquisa" [ngClass]="{ 'pesquisa-mobile': isMobile }">
+  <mat-form-field appearance="outline">
+    <mat-label>Nome do Produto</mat-label>
+    <input matInput type="text" [(ngModel)]="nomeFiltro" (input)="buscarPorNome()">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Código</mat-label>
+    <input matInput type="number" [(ngModel)]="codigoFiltro" (input)="buscarPorCodigo()">
+  </mat-form-field>
+  <div style="display: inline-flex; justify-content: center; align-items: center;">
+    <button class="btn-add" (click)="openModalAdd()"><i class="fas fa-plus"></i></button>
+    <!-- <button class="btn-view" (click)="toggleView()">
+      <i [class]="cardsView ? 'fas fa-list' : 'fas fa-th'"></i>
+    </button> -->
+    <button class="btn-check" (click)="openModalCheck()"><i class="fas fa-check"></i></button>
+  </div>
+
+
+</div>
+<p *ngIf="isLoading === true" class="loading-container">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</p>
+<br>
+<mat-divider></mat-divider>
+
+<div *ngIf="productsEncontrados.length === 0 && isLoading === false">
+  <p style="margin-top: 20px; color: rgb(109, 109, 109); font-size: 15px; display: flex; justify-content: center;">Sem produtos</p>
+  </div>
+
+  <div class="grid-container" *ngIf="isLoading === false && cardsView">
+  <div class="card" [ngClass]="{'card-conf': produto.status === 'F', 'card-cancelado': produto.status === 'C'}"
+       *ngFor="let produto of productsEncontrados" (click)="openModal(produto, produto.quantity, produto.description, produto.productId)">
+    <p class="title-card" [ngClass]="{'title-card-conf': produto.status === 'F', 'title-card-cancelado': produto.status === 'C'}">
+      <strong>{{ produto.description }}</strong>
+    </p>
+    <div class="body-card" [ngClass]="{'body-card-conf': produto.status === 'F'}">
+      <div class="column">
+        <p>EAN: <strong>{{ produto.ean }}</strong></p>
+        <p>Qtd Solicitada: <strong>{{ produto.requestedQuantity }}</strong></p>
+        <p>Qtd Verificada: <strong>{{ produto.checkedQuantity }}</strong></p>
+      </div>
+      <div class="column">
+        <p>Preço: <strong>{{ produto.price }}</strong></p>
+        <p *ngIf="produto.status === 'F'" style="color: green;"><strong>PRODUTO CONFERIDO</strong></p>
+        <p *ngIf="produto.status === 'A' "style="color: #007bff;"><strong>Produto Não Conferido</strong></p>
+        <p *ngIf="produto.status === 'C'" style="color: red;"><strong>CANCELADO</strong></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <div class="container-table" *ngIf="productsEncontrados.length > 0 && cardsView === false" [ngClass]="{ 'table-mobile': isMobile }">
+  <table mat-table [dataSource]="productsEncontrados">
+    <p *ngIf="isLoading === true" class="loading-container">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </p>
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> EAN </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{
+        'status-cancelado': element.status === 'C',
+        'status-conferido': element.status === 'F'
+      }"> {{element.ean}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Item </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{
+        'status-cancelado': element.status === 'C',
+        'status-conferido': element.status === 'F'
+      }"> {{element.description}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="preco">
+      <th mat-header-cell *matHeaderCellDef> Preço </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{
+        'status-cancelado': element.status === 'C',
+        'status-conferido': element.status === 'F'
+      }"> {{element.price}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{
+        'status-cancelado': element.status === 'C',
+        'status-conferido': element.status === 'F'
+      }"> {{element.status}} </td>
+    </ng-container>
+
+
+
+    <ng-container matColumnDef="btnTable">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element"> <button (click)="openModal(element, element.qtdProduct, element.description, element.ean)" class="btn-table">
+        <mat-icon style="font-size: 20px; vertical-align: middle;">visibility</mat-icon>
+      </button>
+       </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="isMobile ? displayedColumnsMobile : displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: isMobile ? displayedColumnsMobile : displayedColumns;"></tr>
+
+  </table>
+  <mat-paginator [length]="lengthProducts" [pageSizeOptions]="[2, 50, 100]" (page)="onPageChange($event)"
+  (pageSize)="onPageChange($event)" aria-label="Select page">
+  </mat-paginator>
+  </div>
+
+<div id="card-modal" class="modal">
+  <div class="modal-content" [ngClass]="{'modal-content-mobile': isMobile}">
+    <div class="modal-header">
+      <span class="modal-title">Conferência</span>
+      <span class="close" (click)="closeModal()">&times;</span>
+    </div>
+
+    <div class="product-name">
+      <strong>{{nomeProduct}}</strong>
+    </div>
+
+    <div class="modal-body">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Código</mat-label>
+        <input matInput [value]="codProduct" readonly="true" style="text-align: center; font-size: 20px;">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Quantidade</mat-label>
+        <input matInput [(ngModel)]="qtdProduct" style="text-align: center; font-size: 20px;">
+      </mat-form-field>
+    </div>
+    <div class="btn-center">
+      <button class="btn-cancelar" (click)="cancelar()">Cancelar produto</button>
+      <button class="btn-conferir" (click)="conferir()">Conferir produto</button>
+    </div>
+  </div>
+</div>
+
+<div id="add-modal" class="modal">
+  <div class="modal-content" [ngClass]="{'modal-content-mobile': isMobile}">
+    <div class="modal-header">
+      <span class="modal-title">Adicionar item</span>
+      <span class="close" (click)="closeModalAdd()">&times;</span>
+    </div>
+
+    <div style="display: flex; justify-content: center;">
+      <img src="assets/produto-icon.png" alt="produto" style="width: 45vh; margin-top: 20px; margin-bottom: -30px;">
+    </div>
+
+    <div class="product-name">
+      <strong>{{ nomeProduct }}</strong>
+    </div>
+
+
+    <div class="modal-body-mobile" [ngClass]="{'modal-body-mobile' : isMobile}">
+
+      <!-- <mat-form-field appearance="fill">
+        <mat-label>Código</mat-label>
+        <input matInput [(ngModel)]="codProduct" (input)="buscarProdutoPorCodigoAdd()" style="text-align: center; font-size: 20px;">
+      </mat-form-field> -->
+
+      <form class="example-form" style="width: 100%;">
+        <mat-form-field appearance="outline" style="width: 80%; margin-top: 30px;">
+          <mat-label>Nome</mat-label>
+          <input type="text" matInput
+                 [formControl]="searchControl"
+                 [matAutocomplete]="autoOrigem"
+                 [(ngModel)]="searchKeyword"
+                 (input)="searchProductByName()"
+                 [value]="searchKeywordName">
+          <mat-autocomplete #autoOrigem="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelectedSearch($event)">
+            <mat-option *ngFor="let option of filteredOptionsSearch | async" [value]="option" (click)="choseProduct(option)">
+              {{ option.nome }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+
+      <mat-form-field appearance="outline" style="width: 40%;">
+        <mat-label>Quantidade</mat-label>
+        <input matInput [(ngModel)]="qtdProduct" style="text-align: center; font-size: 20px;">
+      </mat-form-field>
+
+
+    </div>
+    <div *ngIf="produtosEncontrados.length > 0" class="produto-encontrado">
+      <ul>
+        <li *ngFor="let produto of produtosEncontrados" style="font-size: 15px;">{{ produto.price | currency:'BRL':'symbol':'1.2-2' }}</li>
+      </ul>
+    </div>
+    <div class="btn-center">
+      <button class="btn-conferir" (click)="adicionarItem(codProduct, qtdProduct)">Adicionar produto</button>
+
+    </div>
+  </div>
+</div>
+
+<div id="check-modal" class="modal">
+  <div class="modal-content" [ngClass]="{'modal-content-mobile': isMobile}">
+    <div class="modal-header">
+      <span class="modal-title">Concluir transferência</span>
+      <span class="close" (click)="closeModalCheck()">&times;</span>
+    </div>
+    <div class="modal-body-mobile">
+
+      <div style="display: flex; justify-content: center;">
+        <img src="assets/check-items.png" alt="check" style="width: 60vh;">
+      </div>
+        <p style="font-size: 20px;">
+        Deseja concluir essa transferência?
+      </p>
+      <p style="font-size: 16px;">
+      Valor final: <strong>{{totalTransfFormat}}</strong>
+    </p>
+      <button class="btn-confirm-check" (click)="confirmTransf()">
+        Confirmar
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="caution-modal" class="modal">
+  <div class="modal-content" [ngClass]="{'modal-content-mobile': isMobile}">
+    <div class="modal-header">
+      <span class="modal-title">Atenção!</span>
+      <span class="close" (click)="closeModalCaution()">&times;</span>
+    </div>
+    <div class="modal-body-mobile">
+
+      <div style="display: flex; justify-content: center;">
+        <img src="assets/caution-icon.png" alt="check" style="width: 45vh;">
+      </div>
+        <p style="font-size: 20px;">
+        <strong style="color: red;">Atenção:</strong> Não há itens nessa transferência.
+      </p>
+      <p style="font-size: 16px;">
+      Você deseja <strong style="color: red;">excluir permanentemente</strong> essa transferência?
+    </p>
+      <button style="margin-right: 20px;" class="btn-conferir" (click)="closeModalCaution()">
+        Cancelar
+      </button>
+      <button class="btn-cancelar" (click)="deleteTransf()">
+        Excluir
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+

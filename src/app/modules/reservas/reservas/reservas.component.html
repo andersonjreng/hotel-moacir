@@ -1,0 +1,52 @@
+
+<div class="form-container">
+  <mat-form-field appearance="outline">
+    <mat-label>NÚMERO DO QUARTO</mat-label>
+    <input matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>ANDAR</mat-label>
+    <input matInput>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Enter a date range</mat-label>
+  <mat-date-range-input [formGroup]="agendamentoForm" [rangePicker]="picker">
+    <input matStartDate formControlName="start" placeholder="Start date">
+    <input matEndDate formControlName="end" placeholder="End date">
+  </mat-date-range-input>
+  <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-date-range-picker #picker></mat-date-range-picker>
+
+  
+  </mat-form-field>
+  <button class="agendar-btn" (click)="openAgendarModal()">AGENDAR <i class="fas fa-clock" style="margin-left: 10px; font-size: 15px;"></i></button>
+</div>
+
+
+
+<div class="card-container">
+  <div class="card" *ngFor="let reserva of reservasQuartos">
+    <div class="card-header" [ngClass]="{ 'today-header': isToday(reserva.dataInicio) }">
+      <div class="header-part2" *ngIf="reserva.quarto">
+        QUARTO {{ reserva.quarto.numero }}
+      </div>
+      <div class="header-part1">
+        <i class="fas fa-clock"></i> {{ reserva.dataInicio | date: 'dd/MM/yyyy' }}
+      </div>
+    </div>
+    <div class="card-body-container">
+      <div class="card-subtitle">
+        {{ reserva.hospedeId }}
+      </div>
+      <div class="card-icons">
+        <i class="fas fa-sign-in-alt" (click)="openReserveModal()" style="color: rgb(0, 170, 0);"></i>
+        <i class="fas fa-sign-out-alt" (click)="openAgendarModal()" style="color: rgb(196, 4, 4);"></i>
+        <!-- <i class="fas fa-ban" (click)="openLiberarQuarto()"></i> -->
+      </div>
+      <div class="card-body">NÚMERO DE RESERVA: {{ reserva.id }}º</div>
+      <div class="card-body">CHECK-IN: {{ reserva.dataInicio | date: 'dd/MM/yyyy HH:mm' }}</div>
+      <div class="card-body">CHECK-OUT: {{ reserva.dataFim | date: 'dd/MM/yyyy HH:mm' }}</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,418 @@
+.title-page {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+  color: rgb(75, 75, 75);
+}
+
+.title-mobile h1 {
+  text-align: center;
+}
+
+mat-form-field {
+  width: 70%;
+}
+
+.body-mov {
+  display: block;
+  justify-content: center;
+}
+
+.super-card {
+  display: block; /* Alterado para um elemento em bloco */
+  padding: 30px;
+  border: 1px solid rgb(209, 209, 209);
+  width: 80%;
+  text-align: center; /* Para manter o conteúdo centralizado */
+  margin: auto; /* Para centralizar horizontalmente */
+  margin-bottom: 20px;
+}
+
+.super-card-mobile {
+  text-align: center;
+}
+
+.btn-gravar {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  font-size: 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.btn {
+  color: white;
+  padding: 10px 20px;
+  margin-left: 15px;
+  font-size: 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.back {
+  color: black;
+}
+.red {
+  @apply bg-red-600 hover:bg-red-500
+}
+
+.green {
+  @apply bg-green-600 hover:bg-green-500
+}
+
+.blue {
+  @apply bg-blue-600 hover:bg-blue-500
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Isso faz com que as colunas tenham no mínimo 300px de largura e preencham o espaço disponível */
+  gap: 10px; /* Espaçamento entre os cards */
+  margin: 20px
+}
+
+.card {
+  width: 100%; /* Defina a largura do card conforme necessário */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  overflow: hidden; /* Evita que o conteúdo exceda a largura do card */
+  cursor: pointer;
+  transition: border 0.3s;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  background-color: #fff; /* Cor de fundo branca */
+  background-image: linear-gradient(to bottom right, #fff, #cecece); /* Degradê */
+}
+
+.card-conf {
+  background: linear-gradient(to right, white, white 96%, rgb(0, 128, 0) 96%, rgb(0, 128, 0));
+}
+
+.card-emconf {
+  background: linear-gradient(to right, white, white 96%, rgb(189, 192, 0) 96%, rgb(189, 192, 0));
+}
+
+.card:hover {
+  border: 1px solid #62cdff;
+}
+
+.title-card {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #0053ac;
+}
+
+.title-card-conf {
+  color: rgb(0, 128, 0)!important
+}
+
+.title-card-emconf {
+  color: rgb(189, 192, 0)!important
+}
+
+.body-card {
+  display: flex;
+}
+
+.column {
+  flex: 1;
+  padding: 0 5px; /* Adicione algum espaçamento entre as colunas, se desejar */
+}
+
+.title-card {
+  font-size: 18px;
+  color: #0053ac;
+}
+
+.body-card {
+  font-size: 15px;
+}
+
+.delete-icon {
+  float: right;
+  margin-right: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delete-icon:hover {
+  color: red;
+}
+
+
+
+mat-form-field {
+  margin-right: 10px;
+  background-color: white;
+}
+
+.search-icon {
+  color: rgb(102, 102, 102);
+  transition: all 0.3s ease;
+}
+
+.search-icon:hover {
+  color: #004a99;
+}
+
+.container-img {
+  display: flex;
+  align-items: center; /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  height: 100%; /* Define a altura do contêiner */
+}
+
+.opcoesProducts {
+  font-size: 16px;
+  margin: 15px;
+  cursor: pointer;
+  color: rgb(99, 99, 99);
+  transition: all 0.3s ease;
+
+}
+
+.opcoesProducts:hover {
+  color: #004a99;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  text-align: center; /* Centralizar o conteúdo do modal */
+}
+
+.modal-content {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 50%;
+  max-height: 80%; /* Alterado para height em vez de max-height */
+  overflow: auto; /* Alterado para auto */
+  margin: 0 auto;
+  background-color: #fefefe;
+  padding: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.modal-search-content {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  min-height: 60%;
+  max-width: 50%;
+  max-height: 80%; /* Alterado para height em vez de max-height */
+  overflow: auto; /* Alterado para auto */
+  margin: 0 auto;
+  background-color: #fefefe;
+  padding: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.modal-content-delete {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 50%;
+  min-height: 40%;
+  max-height: 80%; /* Alterado para height em vez de max-height */
+  overflow: auto; /* Alterado para auto */
+  margin: 0 auto;
+  background-color: #fefefe;
+  padding: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.modal-content-mobile {
+  max-width: 80%;
+}
+
+// .modal {
+//   display: none; /* Ocultar modal por padrão */
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro para destacar o modal */
+//   overflow-y: auto;
+
+
+// }
+
+// .modal-content {
+//   background-color: #fefefe;
+//   margin: 15% auto; /* Centralizar verticalmente e um pouco abaixo */
+//   padding: 20px;
+//   border: 1px solid #888;
+//   width: 80%;
+//   max-width: 600px; /* Largura máxima do modal */
+
+// }
+
+/* Estilos da parte superior */
+.modal-header {
+  background-color: #007bff; /* Cor de fundo da parte superior */
+  color: #fff; /* Cor do texto da parte superior */
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-top-left-radius: 10px;
+}
+
+.close {
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 3;
+}
+
+.close:hover {
+  color: rgb(253, 60, 60);
+}
+
+/* Estilos do conteúdo do modal */
+.modal-body {
+  width: 100%;
+  padding: 20px;
+  display: block;
+  justify-content: center;
+  margin-bottom: -15px;
+}
+
+.modal-body-mobile {
+  display: block;
+}
+
+/* Estilos do título do modal */
+.modal-title {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.product-name {
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.btn-excluir {
+  margin-left: 10px;
+  background-color: #c70021;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 5px;
+  font-size: 15px;
+  transition: background-color 0.3s;
+}
+
+.btn-excluir:hover {
+  background-color: #880017;
+}
+
+.btn-conferir:hover {
+  background-color: #0053ac;
+}
+
+.btn-center {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.produto-encontrado {
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  margin-top: -20px;
+  margin-bottom: 20px;
+  color: rgb(99, 99, 99);
+}
+
+.produtos-check {
+  display: grid;
+  justify-content: center;
+  color: #0053ac;
+  margin-top: 20px;
+}
+
+li.lista-check{
+  font-size: 15px;
+  text-align: center;
+  border: 1px solid rgb(168, 168, 168);
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: color, background-color 0.4s;
+}
+
+li.lista-check:hover {
+  color: white;
+  background-color: #0053ac;
+}
+
+.filters mat-form-field {
+  flex-basis: calc(50% - 20px);
+  margin: 10px;
+  height: 8vh;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.filters-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza verticalmente os itens */
+}
+
+.filters-mobile mat-form-field {
+
+  flex-basis: calc(100% - 20px);
+  width: 70%;
+  height: auto; /* Altura automática para acomodar o conteúdo */
+  margin: -5px;
+}
+
+.checkBox {
+  background-color: transparent;
+}
+
+.checkBox:hover {
+  background-color: rgb(233, 233, 233);
+}
+
+.btn-clean-filters {
+  margin-left: 15px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+.btn-clean-filters:hover {
+  background-color: rgb(0, 104, 165);
+  color: white;
+}
+
+.btn-clean-filters-mobile {
+  align-self: center;
+}

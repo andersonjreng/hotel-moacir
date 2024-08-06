@@ -1,0 +1,367 @@
+.title-mobile {
+  justify-content: center;
+}
+
+mat-form-field {
+  margin-left: 20px;
+  width: 30vh;
+  height: 12vh;
+}
+
+.pesquisa {
+  margin-top: -20px;
+}
+
+.pesquisa mat-form-field {
+  flex-basis: calc(50% - 20px);
+  margin: 10px;
+  margin-left: 20px;
+  height: 8vh;
+  width: 40%;
+}
+
+.pesquisa-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza verticalmente os itens */
+}
+
+.pesquisa-mobile mat-form-field {
+  flex-basis: calc(100% - 20px);
+  height: auto; /* Altura automática para acomodar o conteúdo */
+  width: 80%;
+  margin-bottom: -20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Isso faz com que as colunas tenham no mínimo 300px de largura e preencham o espaço disponível */
+  gap: 10px; /* Espaçamento entre os cards */
+  margin: 20px;
+}
+
+.btn-add {
+  display: inline-flex; /* Usando flex para centralizar o ícone verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 0; /* Removendo o padding para garantir que o botão seja perfeitamente circular */
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 50%; /* Agora o botão terá formato de círculo */
+  cursor: pointer;
+  font-size: 22px;
+  width: 6vh; /* Definindo a largura igual à altura */
+  height: 6vh;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+
+.btn-add:hover {
+  background-color: #004da0;
+
+}
+
+.card {
+  width: 100%; /* Defina a largura do card conforme necessário */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  overflow: hidden; /* Evita que o conteúdo exceda a largura do card */
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  background-color: #fff; /* Cor de fundo branca */
+  background-image: linear-gradient(to bottom right, #fff, #cecece); /* Degradê */
+  transition: border 0.3s;
+}
+
+.card:hover {
+  border: 1px solid #62cdff;
+}
+
+.title-card {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #0053ac;
+}
+
+.body-card {
+  display: flex;
+}
+
+.column {
+  flex: 1;
+  padding: 0 5px; /* Adicione algum espaçamento entre as colunas, se desejar */
+}
+
+.title-card {
+  font-size: 18px;
+}
+
+.body-card {
+  font-size: 15px;
+}
+
+.card-conf {
+  background: linear-gradient(to right, white, white 96%, rgb(0, 128, 0) 96%, rgb(0, 128, 0));
+}
+
+.card-cancelado {
+  background: linear-gradient(to right, white, white 96%, rgb(192, 5, 15) 96%, rgb(192, 5, 15));
+}
+
+ .title-card-conf {
+   color: rgb(0, 128, 0);
+ }
+
+ .title-card-cancelado {
+  color: rgb(192, 5, 15);
+}
+
+// .body-card-conf {
+//   color: white;
+// }
+
+.modal-content-mobile {
+  max-width: 80%!important;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+  text-align: center; /* Centralizar o conteúdo do modal */
+
+
+}
+
+.modal-content {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 50%; /* Defina a largura máxima do conteúdo do modal */
+  max-height: 80%;
+  margin: 0 auto; /* Centralize o modal horizontalmente */
+  background-color: #fefefe;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Permitir a rolagem se o conteúdo exceder a altura do modal */
+  border-radius: 10px;
+}
+
+/* Estilos da parte superior */
+.modal-header {
+  background-color: #007bff; /* Cor de fundo da parte superior */
+  color: #fff; /* Cor do texto da parte superior */
+  padding: 10px;
+  position: relative; /* Para posicionar o botão de fechar */
+  margin-top: -20px;
+  margin-left: -20px;
+  margin-right: -20px;
+}
+.close {
+  color: #fff; /* Cor do botão de fechar */
+  font-size: 20px;
+  font-weight: bold;
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close:hover {
+  color: rgb(253, 60, 60);
+}
+
+/* Estilos do conteúdo do modal */
+.modal-body {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-body-mobile {
+  display: block;
+}
+
+/* Estilos do título do modal */
+.modal-title {
+  margin-top: 0;
+  font-size: 15px;
+}
+
+.product-name {
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: -10px;
+}
+
+.produto-encontrado {
+  display: flex;
+  justify-content: center;
+  margin-top: -20px;
+  margin-bottom: 10px;
+  color: rgb(114, 114, 114);
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  margin-top: 30px;
+
+}
+
+.btn-confirm-check {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.btn-confirm-check:hover {
+  background-color: rgb(0, 95, 0);
+}
+
+.btn-check {
+  display: inline-flex; /* Usando flex para centralizar o ícone verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 0;
+  background-color: green; /* Cor de fundo verde */
+  color: white; /* Cor do ícone branca */
+  border: none;
+  border-radius: 50%; /* Torna o botão circular */
+  width: 6vh; /* Definindo a largura igual à altura */
+  height: 6vh;
+  margin-left: 10px;
+  font-size: 20px; /* Tamanho do ícone */
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.btn-check:hover {
+  background-color: darkgreen; /* Altera a cor de fundo ao passar o mouse */
+}
+
+.btn-view {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  background-color: #565c5a; /* Cor de fundo amarela */
+  color: white; /* Cor do ícone branca */
+  border: none;
+  border-radius: 50%;
+  width: 6vh;
+  height: 6vh;
+  margin-left: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+.btn-view:hover {
+  background-color: #41403f; /* Altera a cor de fundo ao passar o mouse */
+}
+
+
+.btn-conferir,
+.btn-cancelar {
+
+  padding: 10px 20px;
+  color: white;
+  border-radius: 5px;
+  font-size: 15px;
+  transition: background-color 0.3s;
+}
+
+.btn-cancelar {
+  background-color: #b80b1a;
+  margin-right: 10px;
+}
+
+.btn-cancelar:hover {
+  background-color: #830812;
+}
+
+.btn-conferir {
+  background-color: #007bff;
+}
+
+.btn-conferir:hover {
+  background-color: #0053ac;
+}
+
+.btn-center {
+  display: flex;
+  justify-content: center;
+}
+.title-page {
+  margin: 20px;
+  display: flex;
+  color: rgb(75, 75, 75);
+}
+
+.container-table {
+  margin: 20px;
+  width: 100%;
+}
+
+.table-mobile {
+  width: 90%;
+}
+
+table {
+  background-color: transparent;
+}
+
+th {
+  font-weight: bold;
+  color: rgb(0, 130, 206);
+}
+
+tr {
+  font-size: 13px!important;
+}
+
+.status-conferido {
+  color: #18a724;
+  font-weight: bold;
+}
+
+.status-cancelado {
+  color: #cc1b1b;
+  font-weight: bold;
+}
+
+
+.btn-table {
+  background-color: rgb(0, 130, 206);
+  padding: 2px 8px;
+  padding-bottom: 0px;
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.btn-table:hover {
+  background-color: rgb(0, 104, 165);
+}
+

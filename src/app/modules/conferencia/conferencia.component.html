@@ -1,0 +1,109 @@
+<div
+  class="title-page"
+  class="flex justify-between items-center mt-4 mb-3 px-3"
+  [ngClass]="{ 'title-mobile': isMobile }"
+>
+  <div class="flex items-center">
+    <div class="h-10 w-10 flex items-center justify-center mr-5">
+      <mat-icon class="mat-18">list_alt</mat-icon>
+    </div>
+    <div class="text-3xl">Hóspedes</div>
+  </div>
+</div>
+
+<mat-progress-bar *ngIf="isLoadingPage" mode="indeterminate"></mat-progress-bar>
+<div *ngIf="isLoadingPage === false">
+<div class="filters" [ngClass]="{ 'filters-mobile': isMobile }">
+
+  <!-- <mat-form-field appearance="outline">
+    <input matInput placeholder="ID" [(ngModel)]="searchId" (ngModelChange)="onSearchIdChange($event)">
+  </mat-form-field> -->
+
+  <mat-form-field appearance="outline">
+    <mat-label>Origem</mat-label>
+    <mat-select [(value)]="selectedOrigem" (selectionChange)="selectOrigem($event.value)">
+      <mat-option *ngFor="let item of getOrigemValues()" [value]="item">{{ item }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Destino</mat-label>
+    <mat-select [(value)]="selectedDestino" (selectionChange)="selectDestino($event.value)">
+      <mat-option *ngFor="let item of getDestinoValues()" [value]="item">{{ item }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <input matInput [matDatepicker]="picker" placeholder="Data Criada" (dateInput)="handleDateChange($event)" [(ngModel)]="selectedDate" readonly>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+
+</div>
+  <div style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: -10px;" >
+  <mat-checkbox class="checkBox" [(ngModel)]="exibirConf" (change)="applyFilter()">Finalizadas</mat-checkbox>
+  <button mat-button (click)="clearFilters()" class="btn-clean-filters" [ngClass]="{ 'btn-clean-filters-mobile': isMobile }">
+    <mat-icon>clear</mat-icon> <!-- Ícone ao lado esquerdo -->
+    Limpar Filtros
+  </button>
+
+</div>
+
+<p *ngIf="isLoading === true" class="loading-container">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</p>
+<br>
+<mat-divider></mat-divider>
+<br>
+<div class="container-table" *ngIf="dataSource.length > 0" [ngClass]="{ 'table-mobile': isMobile }">
+<table mat-table [dataSource]="dataSource">
+  <p *ngIf="isLoading === true" class="loading-container">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </p>
+  <!-- Position Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> ID </th>
+    <td mat-cell *matCellDef="let element" (click)="this.isMobile ? goToCards(element) : null"> {{element.id}} </td>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="origem">
+    <th mat-header-cell *matHeaderCellDef> Origem </th>
+    <td mat-cell *matCellDef="let element" (click)="this.isMobile ? goToCards(element) : null"> {{element.origem}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="destino">
+    <th mat-header-cell *matHeaderCellDef> Destino </th>
+    <td mat-cell *matCellDef="let element" (click)="this.isMobile ? goToCards(element) : null"> {{element.destino}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="dataCriada">
+    <th mat-header-cell *matHeaderCellDef> Data Criação </th>
+    <td mat-cell *matCellDef="let element" (click)="this.isMobile ? goToCards(element) : null"> {{element.dataCriada | date: "dd/MM/yy '|' HH:mm"}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="btnTable">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element"> <button (click)="goToCards(element)" class="btn-table">
+      <mat-icon style="font-size: 20px; vertical-align: middle;">visibility</mat-icon>
+    </button>
+     </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="isMobile ? displayedColumnsMobile : displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: isMobile ? displayedColumnsMobile : displayedColumns;"></tr>
+
+</table>
+<mat-paginator [length]="lengthTranfs" [pageSizeOptions]="[10, 50, 100]" (page)="onPageChange($event)"
+  (pageSize)="onPageChange($event)" aria-label="Select page">
+  </mat-paginator>
+</div>
+
+<div style="display: flex; justify-content: center; margin-top: 40px;" *ngIf="dataSource.length === 0">
+<p style="color: rgb(100, 100, 100); font-size: 15px;">Não há transferências no momento.</p>
+</div>
+
+</div>

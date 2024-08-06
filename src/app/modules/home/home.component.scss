@@ -1,0 +1,102 @@
+.container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* Centralizar verticalmente */
+}
+
+.img-modal {
+  height: 30vh;
+  margin-right: 10px; /* Espaçamento entre a imagem e o texto */
+}
+
+.img-mobile {
+  height: 15vh;
+}
+
+.boas-vindas {
+  margin: 0; /* Remover margens padrão */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 30vh; /* Igualar a altura da imagem */
+  font-size: 30px; /* Tamanho da fonte */
+  line-height: 1;
+}
+
+.boas-vindas-mobile {
+  height: 15vh;
+  font-size: 15px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25%, 1fr)); /* Isso faz com que as colunas tenham no mínimo 300px de largura e preencham o espaço disponível */
+  gap: 10px; /* Espaçamento entre os cards */
+  margin: 20px;
+}
+
+.grid-mobile {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.card {
+  width: 95%; /* Defina a largura do card conforme necessário */
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden; /* Evita que o conteúdo exceda a largura do card */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  background-color: #fff; /* Cor de fundo branca */
+  background-image: linear-gradient(to bottom right, #fff, #cecece); /* Degradê */
+  display: flex;
+  flex-direction: row; /* Organiza os itens horizontalmente */
+  align-items: center; /* Alinha os itens verticalmente ao centro */
+  transition: transform 0.3s;
+  margin-bottom: 10px;
+}
+
+.card:hover {
+  transform: scale(1.1); /* Aumenta o tamanho em 10% ao passar o mouse */
+}
+
+.card-content {
+  padding: 20px;
+  display: flex;
+  flex: 1; /* Ocupa todo o espaço disponível */
+}
+
+.home_card_text {
+  display: flex;
+  flex-direction: column;
+}
+
+.home_card_sub {
+  font-size: 13px;
+  margin: 0;
+  color: #133D5A;
+}
+
+.home_card_valor {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+  color: rgb(61, 61, 61);
+}
+
+.icon-container {
+  margin-left: auto; /* Move o ícone para a direita */
+  margin-right: 10px; /* Espaçamento entre o ícone e a borda direita */
+  color: rgb(61, 61, 61);
+}
+
+/* Estilo para o input de texto */
+.mat-input-element {
+  border: 2px solid #ccc; /* Adiciona uma borda */
+  border-radius: 4px; /* Adiciona cantos arredondados */
+  padding: 8px; /* Adiciona espaçamento interno */
+  transition: border-color 0.3s; /* Adiciona uma transição suave para a borda */
+}
+
+.mat-input-element:focus {
+  outline: none; /* Remove o contorno de foco padrão */
+  border-color: #007bff; /* Muda a cor da borda quando o campo está em foco */
+}

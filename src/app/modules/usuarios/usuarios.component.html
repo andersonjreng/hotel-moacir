@@ -1,0 +1,437 @@
+<div
+  class="title-page"
+  class="flex justify-between items-center mt-4 mb-3 px-3"
+  [ngClass]="{ 'title-mobile': isMobile }"
+>
+  <div class="flex items-center">
+    <div class="h-10 w-10 flex items-center justify-center mr-5">
+      <mat-icon class="mat-18">people</mat-icon>
+    </div>
+    <div class="text-3xl">Usuários</div>
+  </div>
+</div>
+
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+<div
+  class="flex gap-2 mb-10 px-4 items-center"
+  *ngIf="isLoading === false"
+>
+  <mat-form-field appearance="outline">
+    <mat-label>Pesquisar por nome</mat-label>
+    <input
+      #searchInput
+      matInput
+      (keyup)="applyFilter(searchInput.value)"
+      placeholder="Digite para pesquisar"
+    />
+  </mat-form-field>
+
+  <button title="botão adicionar" class="btn-add" [ngClass]="{ 'btn-add-mobile': isMobile }">
+    <i class="fas fa-plus" (click)="openModal()"></i>
+  </button>
+</div>
+
+<div
+  class="container-table"
+  *ngIf="isLoading === false"
+  [ngClass]="{ 'table-mobile': isMobile }"
+>
+  <table mat-table [dataSource]="dataSource">
+    <!--- Definição das colunas -->
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let user">{{ user.userName }}</td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef>Telefone</th>
+      <td mat-cell *matCellDef="let user">{{ user.phoneNumber }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="active">
+      <th mat-header-cell *matHeaderCellDef>Ativo</th>
+      <td mat-cell *matCellDef="let user">
+        <mat-slide-toggle
+          [(ngModel)]="user.active"
+          (change)="toggleActive(user.id, user.active)"
+          [disabled]="user.admin"
+        >
+        </mat-slide-toggle>
+      </td>
+    </ng-container>
+
+    <!-- Edit Button Column -->
+    <ng-container matColumnDef="editBtn">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let user">
+        <button (click)="editUser(user)" class="btn-table">
+          <mat-icon style="font-size: 20px; vertical-align: middle"
+            >edit</mat-icon
+          >
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Definição das linhas -->
+    <tr
+      mat-header-row
+      *matHeaderRowDef="isMobile ? displayedColumnsMobile : displayedColumns"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="
+        let user;
+        columns: isMobile ? displayedColumnsMobile : displayedColumns
+      "
+    ></tr>
+  </table>
+</div>
+
+<!-- <div id="add-modal" class="modal">
+  <div class="modal-content" [ngClass]="{ 'modal-content-mobile': isMobile }">
+    <div class="modal-header">
+      <span class="modal-title" *ngIf="editMode !== true">Adicionar Usuário</span>
+      <span class="modal-title" *ngIf="editMode === true">Atualizar Usuário</span>
+      <span class="close" (click)="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formState" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="form-user">
+          <mat-label>Nome</mat-label>
+          <input required matInput placeholder="Nome" formControlName="nome">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-user">
+          <mat-label>Email</mat-label>
+          <input required matInput placeholder="Email" formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-user">
+          <mat-label>Telefone</mat-label>
+          <input required matInput placeholder="Phone" formControlName="phone">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-user" *ngIf="editMode !== true">
+          <mat-label>Senha</mat-label>
+          <input required matInput type="password" placeholder="Senha" formControlName="senha">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-user" *ngIf="editMode !== true">
+          <mat-label>Confirmação de Senha</mat-label>
+          <input required matInput type="password" placeholder="Confirmação de Senha" formControlName="confirmacaoSenha">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-user">
+          <mat-label>Permissão</mat-label>
+          <mat-select formControlName="permissao">
+            <mat-option value="admin">Administrador</mat-option>
+            <mat-option value="conferencia">Conferência</mat-option>
+            <mat-option value="transferencia">Transferência</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" style="color: red; margin-bottom: 10px; margin-top: -10px; font-size: 13px;">
+          {{ errorMessage }}
+        </div>
+
+
+        <button class="btn-confirm" type="submit" *ngIf="editMode !== true">Cadastrar Usuário</button>
+        <button class="btn-confirm" type="submit" *ngIf="editMode === true">Atualizar</button>
+      </form>
+
+
+    </div>
+  </div>
+</div> -->
+
+<div id="add-modal" class="modal">
+  <div class="modal-content" [ngClass]="{ 'modal-content-mobile': isMobile }">
+    <div class="modal-header">
+      <span class="modal-title">Adicionar Usuário</span>
+      <span class="close" (click)="closeModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div>
+        <!-- Step 1: Cadastro do Usuário -->
+
+        <form
+          [formGroup]="formState"
+          (ngSubmit)="onSubmit()"
+          *ngIf="!registrationSuccess"
+        >
+          <mat-form-field appearance="outline" class="form-user">
+            <mat-label>Nome</mat-label>
+            <input required matInput formControlName="nome" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-user">
+            <mat-label>Email</mat-label>
+            <input required matInput formControlName="email" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-user">
+            <mat-label>Telefone</mat-label>
+            <input required matInput formControlName="phone" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-user">
+            <mat-label>Senha</mat-label>
+            <input
+              required
+              matInput
+              type="{{ hideSenha ? 'password' : 'text' }}"
+              formControlName="senha"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="toggleSenhaVisibility()"
+            >
+              <mat-icon>{{
+                hideSenha ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-user">
+            <mat-label>Confirmação de Senha</mat-label>
+            <input
+              required
+              matInput
+              type="{{ hideConfirmSenha ? 'password' : 'text' }}"
+              formControlName="confirmacaoSenha"
+            />
+            <button
+              mat-icon-button
+              matSuffix
+              type="button"
+              (click)="toggleConfirmSenhaVisibility()"
+            >
+              <mat-icon>{{
+                hideConfirmSenha ? "visibility_off" : "visibility"
+              }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-user">
+            <mat-label>Usuário do Infosac</mat-label>
+            <mat-select
+              placeholder="Selecione ou digite para filtrar"
+              formControlName="infosacUser"
+            >
+              <mat-select-search-trigger>
+                <input
+                  matInput
+                  type="text"
+                  (input)="applyFilterInfosac($event)"
+                  placeholder="Pesquisar..."
+                />
+              </mat-select-search-trigger>
+              <mat-option
+                *ngFor="
+                  let user of (infosacUsers$ | async)?.metadata.response.items
+                "
+                [value]="user.id"
+              >
+                {{ user.id }} - {{ user.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div
+            *ngIf="errorMessage"
+            style="
+              color: red;
+              margin-bottom: 10px;
+              margin-top: -10px;
+              font-size: 13px;
+            "
+          >
+            {{ errorMessage }}
+          </div>
+
+          <button class="btn-confirm" type="submit">Cadastrar Usuário</button>
+        </form>
+
+        <!-- Step 2: Definição de Permissões -->
+        <div *ngIf="registrationSuccess">
+          <mat-progress-bar
+            *ngIf="isLoadingModal"
+            mode="indeterminate"
+          ></mat-progress-bar>
+          <div *ngIf="isLoadingModal === false" class="permissions-body">
+            <ng-template matStepLabel>Definir Permissões</ng-template>
+            <mat-slide-toggle [(ngModel)]="transferenciaEnabled"
+              >Transferência</mat-slide-toggle
+            >
+            <br />
+            <br />
+            <mat-slide-toggle [(ngModel)]="conferenciaEnabled"
+              >Conferência</mat-slide-toggle
+            >
+            <br />
+            <br />
+            <button
+              mat-button
+              color="primary"
+              class="btn-confirm"
+              (click)="salvarPermissoes()"
+            >
+              Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="edit-modal" class="modal">
+  <div class="modal-content" [ngClass]="{ 'modal-content-mobile': isMobile }">
+    <div class="modal-header">
+      <span class="modal-title">Atualizar Usuário</span>
+      <span class="close" (click)="closeEditModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <mat-tab-group>
+        <!-- Tab 1: Cadastro do Usuário -->
+        <mat-tab label="Editar Usuário">
+          <form
+            [formGroup]="formState"
+            (ngSubmit)="onSubmit()"
+            style="margin-top: 30px"
+          >
+            <mat-form-field appearance="outline" class="form-user">
+              <mat-label>Nome</mat-label>
+              <input required matInput formControlName="nome" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-user">
+              <mat-label>Email</mat-label>
+              <input required matInput formControlName="email" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-user">
+              <mat-label>Telefone</mat-label>
+              <input required matInput formControlName="phone" />
+            </mat-form-field>
+
+            <div
+              *ngIf="errorMessage"
+              style="
+                color: red;
+                margin-bottom: 10px;
+                margin-top: -10px;
+                font-size: 13px;
+              "
+            >
+              {{ errorMessage }}
+            </div>
+
+            <button class="btn-confirm" type="submit" *ngIf="editMode === true">
+              Atualizar
+            </button>
+          </form>
+        </mat-tab>
+
+        <!-- Tab 2: Definição de Permissões -->
+        <mat-tab label="Definir Permissões">
+          <div class="permissions-body">
+            <div style="margin: 20px">
+              <mat-slide-toggle [(ngModel)]="transferenciaEnabled"
+                >Transferência</mat-slide-toggle
+              >
+            </div>
+            <div style="margin: 20px">
+              <mat-slide-toggle [(ngModel)]="conferenciaEnabled"
+                >Conferência</mat-slide-toggle
+              >
+            </div>
+          </div>
+          <div style="margin: 20px">
+            <button
+              mat-button
+              color="primary"
+              class="btn-confirm"
+              (click)="salvarPermissoes()"
+            >
+              Salvar
+            </button>
+          </div>
+        </mat-tab>
+        <!-- Tab 3: Alteração de senha -->
+        <mat-tab label="Mudar senha">
+          <form
+            [formGroup]="formPassword"
+            (ngSubmit)="onSubmitPassword()"
+            style="margin-top: 30px"
+          >
+            <mat-form-field appearance="outline" class="form-user">
+              <mat-label>Nova Senha</mat-label>
+              <input
+                required
+                matInput
+                type="{{ hideSenha ? 'password' : 'text' }}"
+                formControlName="novaSenha"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="toggleSenhaVisibility()"
+              >
+                <mat-icon>{{
+                  hideSenha ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-user">
+              <mat-label>Confirmação de Nova Senha</mat-label>
+              <input
+                required
+                matInput
+                type="{{ hideConfirmSenha ? 'password' : 'text' }}"
+                formControlName="confirmacaoNovaSenha"
+              />
+              <button
+                mat-icon-button
+                matSuffix
+                (click)="toggleConfirmSenhaVisibility()"
+              >
+                <mat-icon>{{
+                  hideSenha ? "visibility_off" : "visibility"
+                }}</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <div
+              *ngIf="errorMessage"
+              style="
+                color: red;
+                margin-bottom: 10px;
+                margin-top: -10px;
+                font-size: 13px;
+              "
+            >
+              {{ errorMessage }}
+            </div>
+
+            <button class="btn-confirm" type="submit" *ngIf="editMode === true">
+              Atualizar
+            </button>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

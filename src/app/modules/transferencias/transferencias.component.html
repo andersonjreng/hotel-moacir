@@ -1,0 +1,604 @@
+<div class="title-page" class="flex justify-between items-center mt-4 px-3" [ngClass]="{ 'title-mobile': isMobile }">
+  <div class="flex items-center">
+    <div class="h-10 w-10 flex items-center justify-center mr-5">
+      <mat-icon class="mat-18">sync_alt</mat-icon>
+    </div>
+    <div class="text-3xl">Transferências Internas</div>
+  </div>
+</div>
+
+<div class="body-mov">
+  <ng-container *ngIf="asyncTabs | async as tabs; else loadingTabs">
+    <mat-tab-group
+      [selectedIndex]="selectedTab"
+      (selectedIndexChange)="setTabState($event)"
+    >
+      <mat-tab *ngFor="let tab of tabs">
+        <ng-template mat-tab-label>{{ tab.label }}</ng-template>
+        <ng-template [ngTemplateOutlet]="getContentTemplate(tab)"></ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
+  <ng-template #loadingTabs>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </ng-template>
+</div>
+
+<div id="card-modal" class="modal">
+  <div class="modal-content" [ngClass]="{ 'modal-content-mobile': isMobile }">
+    <div class="modal-header">
+      <!-- <span class="modal-title">Total: {{totalTransfFormat}}</span> -->
+      <span class="modal-title">Adicionar produtos</span>
+      <span class="close" (click)="closeModal()">&times;</span>
+    </div>
+
+    <div class="product-name">
+      <strong>{{ solicitanteSelected }} --> {{ destinoSelected }}</strong>
+    </div>
+
+    <div class="modal-body" [ngClass]="{ 'modal-body-mobile': isMobile }">
+      <!-- <mat-form-field appearance="outline">
+        <mat-label>EAN</mat-label>
+        <input matInput [(ngModel)]="codeProd" [readonly]="readOnly" style="text-align: center; font-size: 20px;" (input)="buscarProdutoPorCodigo()">
+        <button matSuffix mat-icon-button (click)="openNameSearchModal()">
+          <mat-icon class="search-icon">search</mat-icon>
+        </button>
+      </mat-form-field> -->
+
+      <!-- <form class="example-form" style="width: 100%; margin-right: -20px;">
+        <mat-form-field appearance="outline">
+          <mat-label>EAN ou nome</mat-label>
+          <input type="text" matInput
+          [formControl]="searchControl"
+          [matAutocomplete]="autoOrigem"
+          [(ngModel)]="searchKeyword"
+          (input)="searchProductByName()">
+          <mat-autocomplete #autoOrigem="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelectedSearch($event)">
+            <ng-container *ngFor="let option of filteredOptionsSearch | async; trackBy: trackByFn">
+              <mat-option [value]="option">{{ option.nome }}</mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form> -->
+
+      <!-- <form class="example-form" style="width: 100%; margin-right: -20px;" *ngIf="modoEdicao == true">
+        <mat-form-field appearance="outline" [disabled]="true">
+          <mat-label>EAN ou nome</mat-label>
+          <input type="text" matInput
+                 [formControl]="searchControl"
+                 [matAutocomplete]="autoOrigem"
+                 [(ngModel)]="searchKeyword"
+                 (input)="searchProductByName()"
+                 [value]="searchKeywordName">
+          <mat-autocomplete #autoOrigem="matAutocomplete" [displayWith]="displayFn" (optionSelected)="optionSelectedSearch($event)">
+            <mat-option *ngFor="let option of filteredOptionsSearch | async" [value]="option" (click)="choseProduct(option)">
+              {{ option.nome }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form> -->
+
+      <form
+        class="example-form"
+        style="width: 100%; margin-right: -20px"
+        *ngIf="modoEdicao == false"
+      >
+        <mat-form-field appearance="outline">
+          <mat-label>EAN ou nome</mat-label>
+          <input
+            type="text"
+            matInput
+            [formControl]="searchControl"
+            [matAutocomplete]="autoOrigem"
+            [(ngModel)]="searchKeyword"
+            (input)="searchProductByName()"
+            [value]="searchKeywordName"
+          />
+          <mat-autocomplete
+            #autoOrigem="matAutocomplete"
+            [displayWith]="displayFn"
+            (optionSelected)="optionSelectedSearch($event)"
+          >
+            <mat-option
+              *ngFor="let option of filteredOptionsSearch | async"
+              [value]="option"
+              (click)="choseProduct(option)"
+            >
+              {{ option.nome }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Quantidade</mat-label>
+        <input
+          matInput
+          [(ngModel)]="qtdProduct"
+          style="text-align: center; font-size: 20px"
+        />
+      </mat-form-field>
+    </div>
+    <div *ngIf="produtosEncontrados.length > 0" class="produto-encontrado">
+      <ul>
+        <!-- <li *ngFor="let produto of produtosEncontrados" style="font-size: 15px;">{{ produto.nome }} - {{ produto.price | currency:'BRL':'symbol':'1.2-2' }}</li> -->
+        <li *ngFor="let produto of produtosEncontrados" style="font-size: 15px">
+          {{ produto.nome }}
+        </li>
+      </ul>
+    </div>
+    <div class="btn-center" *ngIf="modoEdicao == false">
+      <button class="btn-conferir" (click)="gravarMovProd()">
+        Gravar Produto
+      </button>
+      <button class="btn-finalizar" (click)="sendTransferencia()">
+        Enviar
+      </button>
+    </div>
+    <div class="btn-center" *ngIf="modoEdicao == true">
+      <button
+        class="btn-conferir"
+        style="margin-right: 10px"
+        (click)="
+          backToModal(idSelected, destinoSelected, solicitanteSelected, 'A')
+        "
+      >
+        <mat-icon>keyboard_backspace</mat-icon>
+      </button>
+      <button class="btn-conferir" (click)="atualizarMovProd()">
+        Atualizar
+      </button>
+      <button class="btn-excluir" (click)="deleteMovProd()">Excluir</button>
+      <!-- <button class="btn-excluir" style="margin-left: 10px;" (click)="excluirProduto()">Excluir</button> -->
+    </div>
+
+    <div class="produtos-check" *ngIf="modoEdicao == false">
+      <ul>
+        <li
+          class="lista-check"
+          *ngFor="let produto of produtoSelecionado"
+          (click)="editarProduto(produto.code, produto.qtd)"
+        >
+          <strong>{{ produto.nome }} </strong> - {{ produto.qtd }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="search-modal" class="modal">
+  <div
+    class="modal-search-content"
+    [ngClass]="{ 'modal-content-mobile': isMobile }"
+  >
+    <div class="modal-header">
+      <span class="modal-title">Buscar produto</span>
+      <span class="close" (click)="closeSearchModal()">&times;</span>
+    </div>
+
+    <div class="modal-body">
+      <mat-form-field appearance="outline">
+        <mat-label>Buscar por nome</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchKeyword"
+          (input)="searchProductByName()"
+          (keydown.arrowdown)="(produtosEncontradosByName)"
+        />
+      </mat-form-field>
+    </div>
+    <div
+      *ngIf="produtosEncontradosByName.length > 0"
+      class="produto-encontrado"
+      (keydown)="onKeyDown($event)"
+    >
+      <ul>
+        <li
+          #firstListItem
+          class="opcoesProducts"
+          *ngFor="let produto of produtosEncontradosByName; let i = index"
+          [class.selected]="i === selectedIndex"
+          (click)="choseProduct(produto.ean)"
+          (keydown)="onKeyDown($event)"
+          tabindex="0"
+        >
+          <!-- {{ produto.nome }} - {{ produto.price | currency:'BRL':'symbol':'1.2-2' }} -->
+          {{ produto.nome }}
+        </li>
+      </ul>
+    </div>
+
+    <div
+      *ngIf="hasMoreProducts() && produtosEncontradosByName.length > 0"
+      class="opcoesProducts"
+    >
+      <button (click)="loadMoreProducts()">Carregar mais</button>
+    </div>
+    <div *ngIf="produtosEncontradosByName.length === 0">
+      <p style="color: rgb(105, 105, 105); font-size: 14px">
+        Nenhum produto encontrado
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="card-modal-delete" class="modal">
+  <div
+    class="modal-content-delete"
+    [ngClass]="{ 'modal-content-mobile': isMobile }"
+  >
+    <div class="modal-header">
+      <span class="modal-title">Excluir Transferência</span>
+      <span class="close" (click)="closeModalDelete()">&times;</span>
+    </div>
+
+    <div class="product-name">
+      Tem certeza que deseja excluir essa transferência?
+    </div>
+    <p
+      style="
+        color: red;
+        margin-top: 15px;
+        font-size: 13px;
+        margin-bottom: -10px;
+      "
+    >
+      Essa ação não poderá ser revertida.
+    </p>
+    <div class="modal-body">
+      <div class="btn-center">
+        <button class="btn-conferir" (click)="closeModalDelete()">Não</button>
+        <button class="btn-excluir" (click)="deleteMov()">Sim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #contentTemplateFirst>
+  <section class="example-section">
+    <div class="body-mov">
+      <div class="super-card-mobile" *ngIf="isMobile">
+        <div class="container-img">
+          <img src="assets/mov-icon.png" alt="mov" style="width: 200px" />
+        </div>
+
+        <form class="example-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Origem</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="origemControl"
+              [matAutocomplete]="autoOrigem"
+            />
+            <mat-autocomplete
+              #autoOrigem="matAutocomplete"
+              [displayWith]="displayFn"
+              (optionSelected)="optionSelected($event)"
+            >
+              <ng-container
+                *ngFor="
+                  let option of filteredOptions | async;
+                  trackBy: trackByFn
+                "
+              >
+                <mat-option [value]="option">{{
+                  option.fantasyName
+                }}</mat-option>
+              </ng-container>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+
+        <form class="example-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Destino</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="destinoControl"
+              [matAutocomplete]="autoDestino"
+            />
+            <mat-autocomplete
+              #autoDestino="matAutocomplete"
+              [displayWith]="displayFn"
+              (optionSelected)="optionSelectedDestino($event)"
+            >
+              <ng-container
+                *ngFor="
+                  let option of filteredOptionsDestino | async;
+                  trackBy: trackByFn
+                "
+              >
+                <mat-option [value]="option">{{
+                  option.fantasyName
+                }}</mat-option>
+              </ng-container>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Observação</mat-label>
+          <textarea
+            matInput
+            rows="5"
+            placeholder="Digite sua observação aqui"
+            [(ngModel)]="observacaoMov"
+          ></textarea>
+        </mat-form-field>
+        <br />
+        <button class="btn-gravar" (click)="gravarMov()">Gravar</button>
+      </div>
+      <div class="super-card" *ngIf="isMobile === false">
+        <div class="container-img">
+          <img src="assets/mov-icon.png" alt="mov" style="width: 30vh" />
+        </div>
+
+        <form class="example-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Origem</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="origemControl"
+              [matAutocomplete]="autoOrigem"
+            />
+            <mat-autocomplete
+              #autoOrigem="matAutocomplete"
+              [displayWith]="displayFn"
+              (optionSelected)="optionSelected($event)"
+            >
+              <ng-container
+                *ngFor="
+                  let option of filteredOptions | async;
+                  trackBy: trackByFn
+                "
+              >
+                <mat-option [value]="option">{{
+                  option.fantasyName
+                }}</mat-option>
+              </ng-container>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+        <form class="example-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Destino</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="destinoControl"
+              [matAutocomplete]="autoDestino"
+            />
+            <mat-autocomplete
+              #autoDestino="matAutocomplete"
+              [displayWith]="displayFn"
+              (optionSelected)="optionSelectedDestino($event)"
+            >
+              <ng-container
+                *ngFor="
+                  let option of filteredOptionsDestino | async;
+                  trackBy: trackByFn
+                "
+              >
+                <mat-option [value]="option">{{
+                  option.fantasyName
+                }}</mat-option>
+              </ng-container>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+
+        <!-- <mat-form-field appearance="outline">
+        <mat-label>Origem</mat-label>
+        <mat-select [(ngModel)]="selectedSolicitante" style="font-size: 20px;">
+          <mat-option *ngFor="let solicitante of solicitantesMov" [value]="solicitante">
+            {{ solicitante.fantasyName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+        <!-- <mat-form-field appearance="outline">
+        <mat-label>Destino</mat-label>
+        <mat-select [(ngModel)]="selectedDestino" style="font-size: 20px;">
+          <mat-option *ngFor="let destino of solicitantesMov" [value]="destino">
+            {{ destino.fantasyName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field> -->
+
+        <mat-form-field appearance="outline">
+          <mat-label>Observação</mat-label>
+          <textarea
+            matInput
+            rows="5"
+            placeholder="Digite sua observação aqui"
+            [(ngModel)]="observacaoMov"
+          ></textarea>
+        </mat-form-field>
+
+        <br />
+        <button class="btn-gravar" (click)="gravarMov()">Gravar</button>
+      </div>
+    </div>
+  </section>
+</ng-template>
+
+<ng-template #contentTemplateSecond>
+  <section class="example-section">
+    <div class="body-mov">
+      <div class="filters">
+        <mat-form-field appearance="outline">
+          <mat-label>Origem</mat-label>
+          <mat-select
+            [(value)]="selectedOrigem"
+            (selectionChange)="selectOrigem($event.value)"
+          >
+            <mat-option
+              *ngFor="let origem of getOrigemValues()"
+              [value]="origem"
+              >{{ origem }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Destino</mat-label>
+          <mat-select
+            [(value)]="selectedDestinoString"
+            (selectionChange)="selectDestino($event.value)"
+          >
+            <mat-option
+              *ngFor="let destino of getDestinoValues()"
+              [value]="destino"
+              >{{ destino }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            [matDatepicker]="picker"
+            placeholder="Data Criada"
+            (dateInput)="handleDateChange($event)"
+            [ngModel]="selectedDate"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          margin-top: 10px;
+          margin-bottom: -10px;
+        "
+      >
+        <mat-checkbox
+          class="checkBox"
+          [(ngModel)]="exibirTransferenciasFechadas"
+          (change)="buscarTransferencias()"
+          >Finalizadas</mat-checkbox
+        >
+
+        <button mat-button (click)="clearFilters()" class="btn-clean-filters">
+          <mat-icon>clear</mat-icon>
+          <!-- Ícone ao lado esquerdo -->
+          Limpar Filtros
+        </button>
+      </div>
+      <br />
+      <mat-divider></mat-divider>
+      <br />
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          margin: 30px;
+          font-size: 16px;
+        "
+        *ngIf="movimentacoes.length === 0"
+      >
+        <p style="color: rgb(112, 112, 112)">
+          Nenhuma transferência encontrada com os filtros selecionados.
+        </p>
+      </div>
+      <div class="grid-container" *ngIf="movimentacoes.length !== 0">
+        <div
+          [class]="
+          'flex flex-col bg-gray-100 rounded-md '+
+          'p-4 w-full overflow-hidden cursor-pointer '+
+          'transition-all shadow-md '+
+          (movs.status === 'A' ? 'border-r-primary border-r-8 ' : '') +
+          (movs.status === 'F' ? 'border-r-green-500 border-r-8 ' : '') +
+          (movs.status === 'E' ? 'border-r-yellow-500 border-r-8 ' : '')
+          "
+          *ngFor="let movs of movimentacoes"
+          (click)="
+            openModal(
+              movs.id,
+              movs.companyDestiny,
+              movs.companyOrigin,
+              movs.status
+            )
+          "
+        >
+          <!-- (click)="
+            openModal(
+              movs.id,
+              movs.companyDestiny,
+              movs.companyOrigin,
+              movs.status
+            )
+          " -->
+          <!-- DATA E BOTAO -->
+          <div class="flex justify-between">
+            <p
+              [class]="
+              'mb-3 font-bold text-lg '+
+              (movs.status === 'A' ? 'text-primary ' : '') +
+              (movs.status === 'F' ? 'text-green-500 ' : '') +
+              (movs.status === 'E' ? 'text-yellow-500 ' : '')
+              "
+            >
+              <strong>
+                {{ movs.createdAt | date : "dd/MM/yy '|' HH:mm" }}
+              </strong>
+            </p>
+            <span
+              *ngIf="movs.status == 'A'"
+              class="delete-icon"
+              (click)="deleteTransfer(movs.id)"
+            >
+              <i class="fas fa-trash"></i>
+              <!-- Ícone de lixeira -->
+            </span>
+          </div>
+
+          <div class="flex justify-start">
+            <p class="text-sm flex-1">ID transferência: </p>
+            <p class="text-sm flex-1">
+              <strong>{{ movs.id }}</strong>
+            </p>
+          </div>
+
+          <div class="flex justify-start">
+            <p class="text-sm flex-1">Origem: </p>
+            <p class="text-sm flex-1">
+              <strong>{{ movs.companyOrigin }}</strong>
+            </p>
+          </div>
+
+          <div class="flex justify-start">
+            <p class="text-sm flex-1">Destino: </p>
+            <p class="text-sm flex-1">
+              <strong>{{ movs.companyDestiny }}</strong>
+            </p>
+          </div>
+
+          <div class="flex justify-start">
+            <p class="text-sm flex-1">Observação: </p>
+            <p class="text-sm flex-1">
+              <strong>{{ movs.observation }}</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <mat-paginator
+      [length]="lengthTranfs"
+      [pageSizeOptions]="[12, 50, 100]"
+      (page)="onPageChange($event)"
+      (pageSize)="onPageChange($event)"
+      aria-label="Select page"
+    >
+    </mat-paginator>
+  </section>
+</ng-template>

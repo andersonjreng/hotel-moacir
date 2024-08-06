@@ -1,0 +1,314 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+}
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    width: 300px;
+    padding: 0;
+    text-align: center;
+    transition: all ease 0.3s;
+}
+.card:hover {
+    transform: scale(1.05);
+}
+
+
+.card-header-free {
+    background-color: rgb(0, 156, 0);
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 20px;
+}
+
+.card-header-busy {
+    background-color: #c20b0b;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 20px;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #281f0f;
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.card-header .fa-trash-alt {
+  cursor: pointer;
+  color: white; /* Ou outra cor que desejar */
+  margin-left: auto; /* Garante que o ícone fique no canto direito */
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.card-header .fa-trash-alt:hover {
+  color: rgb(225, 41, 41);
+
+}
+
+
+.card-body-container {
+    padding: 20px;
+}
+.card-subtitle {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 20px;
+}
+.card-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.card-icons i {
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+.card-icons i:hover {
+    color: #333;
+}
+.card-body {
+    font-size: 11px;
+    color: #777;
+}
+
+.card-icons .disabled-icon {
+  opacity: 0.3; /* Opacidade reduzida para tornar o ícone mais transparente */
+  pointer-events: none; /* Impede que o ícone seja clicável */
+}
+
+
+.form-container {
+    display: flex;
+    margin: 20px;
+    flex-wrap: wrap;
+    width: 80%;
+    gap: 16px; /* Espaço entre os campos */
+  }
+  .form-container > mat-form-field {
+    flex: 1;
+    min-width: 200px; /* Largura mínima para os campos */
+  }
+
+  .agendar-btn {
+  background-color: #281f0f;
+  color: white;
+  padding: 10px 20px;
+  font-size: 12px;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+  height: 50px;
+  }
+
+  .agendar-btn:hover {
+    background-color: rgb(7, 168, 7);
+  }
+/* Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    padding-top: 60px;
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* 5% from the top and centered */
+    border: 1px solid #888;
+    width: 40%; /* Could be more or less, depending on screen size */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 10px; /* Add border radius here */
+    overflow: hidden; /* Ensure that the content doesn't overflow the rounded corners */
+  }
+  
+  .modal-header {
+    background-color: #4d2600; /* Dark brown color */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 10px; /* Match the radius here */
+    border-top-right-radius: 10px; /* Match the radius here */
+  }
+
+  .modal-header-confirm {
+    background-color: #9e0404;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    border-top-left-radius: 10px; /* Match the radius here */
+    border-top-right-radius: 10px; /* Match the radius here */
+
+  }
+  
+  
+  .modal-header h2 {
+    margin: 0;
+  }
+
+  .modal-header-confirm h2 {
+    margin: 0;
+  }
+  
+  .close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .modal-footer {
+    padding: 10px 20px;
+    background-color: #f1f1f1;
+    color: black;
+    text-align: right;
+    border-bottom-left-radius: 10px; /* Match the radius here */
+    border-bottom-right-radius: 10px; /* Match the radius here */
+  }
+
+
+  // #quartoModal {
+  //   display: none; /* Oculta por padrão */
+  //   position: fixed; /* Mantém o modal fixo na tela */
+  //   z-index: 1; /* Garante que o modal esteja acima de outros conteúdos */
+  //   left: 0;
+  //   top: 0;
+  //   width: 100%; /* Cobrir toda a largura */
+  //   height: 100%; /* Cobrir toda a altura */
+  //   overflow: auto; /* Permite rolar conteúdo do modal, se necessário */
+  //   background-color: rgba(0,0,0,0.4); /* Fundo preto translúcido */
+  // }
+  
+  .example-form {
+    text-align: center;
+  }
+  .example-full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .modal-body-quarto {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+
+.form-image-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.submit-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.example-form {
+  flex: 1;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.quarto-imagem {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.custom-green-button {
+  background-color: green;
+  color: white;
+}
+
+.btn-confirm {
+  margin: 10px;
+  font-size: 15px;
+  background-color: green;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  transition: ease all 0.3s;
+}
+
+.btn-confirm:hover {
+  background-color: rgb(1, 73, 1);
+}
+
+.btn-cancel {
+  margin: 10px;
+  font-size: 15px;
+  background-color: rgb(128, 0, 0);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  transition: ease all 0.3s;
+}
+
+.btn-cancel:hover {
+  background-color: rgb(101, 0, 0);
+}
+
+.btn-modal {
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,99 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+<div class="container" *ngIf="isLoading === false" [ngClass]="{'container-mobile': isMobile}">
+  <img src="assets/home-icon.png" alt="hello" class="img-modal" [ngClass]="{'img-mobile': isMobile}" >
+  <p class="boas-vindas" [ngClass]="{'boas-vindas-mobile':isMobile}">Seja bem-vindo(a), <strong style="color: #133D5A">{{user.userName}}!</strong></p>
+</div>
+<mat-divider></mat-divider>
+<div class="grid-container" *ngIf="isLoading === false" [ngClass]="{'grid-mobile':isMobile}">
+  <div class="card">
+    <div class="card-content">
+      <div class="home_card_text">
+        <div class="home_card_sub">Última transferência</div>
+        <div class="home_card_valor">{{ultimaTransf}}</div>
+      </div>
+    </div>
+    <div class="icon-container">
+      <mat-icon class="mat-18">sync_alt</mat-icon>
+    </div>
+  </div>
+  <div class="card" *ngIf="isUpdate || isAdmin">
+    <div class="card-content">
+      <div class="home_card_text">
+        <div class="home_card_sub">Produtos não conferidos</div>
+        <div class="home_card_valor">{{produtosNaoConferidos}}</div>
+      </div>
+    </div>
+    <div class="icon-container">
+      <mat-icon class="mat-18">warning</mat-icon>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-content">
+      <div class="home_card_text">
+        <div *ngIf="isAdmin" class="home_card_sub">Conferências pendentes</div>
+        <div *ngIf="(isUpdate && isCreate === false) && isAdmin === false" class="home_card_sub">Conferências pendentes</div>
+        <div *ngIf="(isUpdate && isCreate) && isAdmin === false" class="home_card_sub">Conferências pendentes</div>
+        <div *ngIf="(isUpdate === false && isCreate) && isAdmin === false" class="home_card_sub">Transferências abertas</div>
+        <div class="home_card_valor">{{confPendentes}}</div>
+      </div>
+    </div>
+    <div class="icon-container">
+      <i class="material-icons">warning</i>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-content">
+      <div class="home_card_text">
+        <div *ngIf="isAdmin" class="home_card_sub">Conferências concluídas</div>
+        <div *ngIf="(isUpdate && isCreate === false) && isAdmin === false" class="home_card_sub">Conferências concluídas</div>
+        <div *ngIf="(isUpdate && isCreate) && isAdmin === false" class="home_card_sub">Conferências concluídas</div>
+        <div *ngIf="(isUpdate === false && isCreate) && isAdmin === false" class="home_card_sub">Transferências finalizadas</div>
+        <div class="home_card_valor">{{confConcluidas}}</div>
+      </div>
+    </div>
+    <div class="icon-container">
+      <mat-icon class="mat-18">check</mat-icon>
+    </div>
+  </div>
+  <div class="card" *ngIf="isAdmin">
+    <div class="card-content">
+      <div class="home_card_text">
+        <div class="home_card_sub">Usuários ativos</div>
+        <div class="home_card_valor">{{usuariosAtivos}}</div>
+      </div>
+    </div>
+    <div class="icon-container">
+      <mat-icon class="mat-18">people</mat-icon>
+    </div>
+  </div>
+  <div class="card" *ngIf="isAdmin">
+    <div class="card-content">
+      <div class="home_card_text">
+        <div class="home_card_sub">Usuários inativos</div>
+        <div class="home_card_valor">{{usuariosInativos}}</div>
+      </div>
+    </div>
+    <div class="icon-container">
+      <i class="material-icons">people</i>
+    </div>
+  </div>
+</div>
+
+<!-- <mat-form-field>
+  <mat-label>Opções</mat-label>
+  <mat-select [formControl]="myControl">
+    <mat-select-search-trigger>
+      <input matInput type="text" style="
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        padding: 8px;
+        font-size: 14px;
+        color: rgb(73, 73, 73);
+        " (input)="applyFilter($event)" placeholder="Pesquisar...">
+
+    </mat-select-search-trigger>
+    <mat-option *ngFor="let option of filteredOptions" [value]="option">{{ option }}</mat-option>
+  </mat-select>
+</mat-form-field> -->
+

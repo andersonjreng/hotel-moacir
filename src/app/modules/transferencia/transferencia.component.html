@@ -1,0 +1,174 @@
+<div class="title-page" class="flex justify-between items-center mt-4 px-3" [ngClass]="{ 'title-mobile': isMobile }">
+  <div class="flex items-center">
+    <button (click)="backPage()" class="hover:bg-black/10 cursor-pointer rounded-full h-10 w-10 flex items-center justify-center mr-5">
+      <mat-icon class="mat-18">arrow_back</mat-icon>
+    </button>
+    <div class="text-3xl">Transferência</div>
+  </div>
+</div>
+<div class="body-mov">
+  <ng-container *ngIf="asyncTabs | async as tabs; else loadingTabs">
+    <div class="product-name">
+      <strong>{{ solicitanteSelected }} --> {{ destinoSelected }}</strong>
+    </div>
+
+    <div class="flex flex-col w-full justify-center" [ngClass]="{ 'modal-body-mobile': isMobile }">
+      <div class="flex justify-center">
+        <mat-form-field *ngIf="modoEdicao == false" appearance="outline">
+          <mat-label>EAN ou nome</mat-label>
+          <input
+            #searchProduto
+            placeholder="EAN ou nome"
+            type="text"
+            matInput
+            [formControl]="searchControl"
+            [matAutocomplete]="autoOrigem"
+            [(ngModel)]="searchKeyword"
+            (input)="searchProductByName()"
+            (keydown)="onKeyDown($event)"
+          />
+          <mat-autocomplete
+            #autoOrigem="matAutocomplete"
+            [displayWith]="displayFn"
+            (optionSelected)="optionSearchAutocompleteEanName($event)"
+          >
+            <mat-option
+              *ngFor="let option of filteredOptionsSearch | async"
+              [value]="option"
+            >
+              {{ option.description }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <div class="flex justify-center">
+        <mat-form-field appearance="outline">
+          <mat-label>Quantidade</mat-label>
+          <input
+            #searchQtde
+            placeholder="Quantidade"
+            matInput
+            type="number"
+            [(ngModel)]="qtdProduct"
+            class="text-center text-lg"
+            (keydown)="onKeyDownQtde($event)"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div *ngIf="produtosEncontrados.length > 0" class="text-lg flex justify-center mb-5 text-gray-500">
+      <ul>
+        <li *ngFor="let produto of produtosEncontrados">
+          {{ produto.description }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex gap-2 justify-center" *ngIf="modoEdicao == false">
+      <button class="btn blue" (click)="gravarMovProd()">
+        Gravar Produto
+      </button>
+      <button class = "btn green" (click)="sendTransferencia()">
+        Enviar Transferência
+      </button>
+    </div>
+
+    <div class="flex gap-2 justify-center" *ngIf="modoEdicao == true">
+      <button
+        class="btn back"
+        style="margin-right: 10px"
+        (click)="
+          backToModal(idSelected, destinoSelected, solicitanteSelected, 'A')
+        "
+      >
+        <mat-icon>keyboard_backspace</mat-icon>
+      </button>
+      <button class="btn blue" (click)="atualizarMovProd()">
+        Atualizar
+      </button>
+      <button class="btn red" (click)="deleteMovProd()">Excluir</button>
+    </div>
+
+    <div class="produtos-check" *ngIf="modoEdicao == false">
+      <ul>
+        <li
+          class="lista-check"
+          *ngFor="let itemTransferencia of itensTransferenciaSelecionados"
+          (click)="editarProduto(itemTransferencia)"
+        >
+          <strong>{{ itemTransferencia.product.description }} </strong> - {{ itemTransferencia.requestedQuantity }}
+        </li>
+      </ul>
+    </div>
+  </ng-container>
+  <ng-template #loadingTabs>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </ng-template>
+</div>
+
+<div id="card-modal-delete" class="modal">
+  <div
+    class="modal-content-delete"
+    [ngClass]="{ 'modal-content-mobile': isMobile }"
+  >
+    <div class="modal-header">
+      <span class="modal-title">Excluir Transferência</span>
+      <span class="close" (click)="closeModalDelete()">&times;</span>
+    </div>
+
+    <div class="product-name">
+      Tem certeza que deseja excluir essa transferência?
+    </div>
+    <p
+      style="
+        color: red;
+        margin-top: 15px;
+        font-size: 13px;
+        margin-bottom: -10px;
+      "
+    >
+      Essa ação não poderá ser revertida.
+    </p>
+    <div class="modal-body">
+      <div class="btn-center">
+        <button class="btn-conferir" (click)="closeModalDelete()">Não</button>
+        <button class="btn-excluir" (click)="deleteMov()">Sim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="card-modal-confirma-enviar" class="modal">
+  <div
+    class="modal-content-delete"
+    [ngClass]="{ 'modal-content-mobile': isMobile }"
+  >
+    <div class="modal-header">
+      <span class="modal-title">Alerta</span>
+      <span class="close" (click)="closeModalDelete()">&times;</span>
+    </div>
+
+    <div class="product-name">
+      Tem certeza que deseja enviar para conferência?
+    </div>
+    <p
+      style="
+        color: red;
+        margin-top: 15px;
+        font-size: 13px;
+        margin-bottom: -10px;
+      "
+    >
+      Essa ação não poderá ser revertida.
+    </p>
+    <div class="modal-body">
+      <div class="btn-center">
+        <button class="btn-conferir" (click)="closeModalDelete()">Não</button>
+        <button class="btn-excluir" (click)="deleteMov()">Sim</button>
+      </div>
+    </div>
+  </div>
+</div>

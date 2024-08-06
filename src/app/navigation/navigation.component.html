@@ -1,0 +1,65 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false"
+    style="height: 100vh; background-color:#281f0f ;"
+  >
+    <!-- HEADER SIDEBAR -->
+    <div class="bg-primary flex flex-col p-4 text-sm text-white font-semibold" style="background-color: #281f0f;">
+      <!-- <div>Usuário: {{user.userName}}</div>
+      <div class="flex justify-between">
+        <div class="font-normal text-gray-300">Versão: 1.1.11</div>
+        <div class="font-normal text-gray-300">Empresa: 1</div>
+      </div>
+      <div class="font-normal text-gray-300">ID Dispositivo:</div> -->
+      <img src="assets/hotel-moacir-logo.png" alt="damsistemas" style="width: 15vh; align-self: center;">
+    </div>
+    <!-- MENU SIDEBAR -->
+    <mat-nav-list>
+      <a
+        *ngFor="let page of validateRuleForShowModule(pages)"
+        mat-list-item
+        routerLink="{{ page.link }}"
+        [class]="isActive(page.link) ? 'itemSide activeLink' : 'itemSide'"
+      >
+        <div class="listItemContent">
+          <mat-icon [style]="isActive(page.link) ? 'color:white;' : 'color: #c1c1c1;'">{{ page?.icon }}</mat-icon>
+          <span [style]="isActive(page.link) ? 'color:white;' : 'color: #c1c1c1;'"
+            >{{ page?.name }}
+          </span>
+        </div>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <!-- CONTENTE -->
+  <mat-sidenav-content>
+    <mat-toolbar
+    [style.border]="'1px solid #c1c1c138'"
+    class="flex items-center"
+    >
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="(isHandset$ | async) || isMobile"
+
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <div class="spacer" *ngIf="(isHandset$ | async) || isMobile"></div>
+      <!-- <div>StockMasterDash</div> -->
+      <img src="assets/hotel-moacir-horizontal.png" alt="logo" style="width: 25vh; padding: 30px">
+      <div class="spacer"></div>
+      <app-user-menu-appbar></app-user-menu-appbar>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+

@@ -1,0 +1,153 @@
+<div class="form-container">
+    <mat-form-field appearance="outline">
+      <mat-label>NÚMERO DO QUARTO</mat-label>
+      <input matInput>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>ANDAR</mat-label>
+      <input matInput>
+    </mat-form-field>
+    <button class="agendar-btn" (click)="openAgendarModal()">AGENDAR <i class="fas fa-clock" style="margin-left: 10px; font-size: 15px;"></i></button>
+    <button class="agendar-btn" (click)="openQuartoModal()">CRIAR QUARTO <i class="fas fa-bed" style="margin-left: 10px; font-size: 15px;"></i></button>
+  </div>
+
+  <div class="card-container">
+    <div class="card" *ngFor="let quarto of quartosDisponiveis">
+      <div class="card-header"
+           [ngStyle]="{
+             'background-color': quarto.status === 'LIBERADO' ? 'rgb(0, 118, 0)' : 
+                                quarto.status === 'OCUPADO' ? 'rgb(187, 5, 5)' : 
+                                quarto.status === 'USADO' ? 'rgb(204, 204, 0)' : ''
+           }">
+        <div class="card-title">QUARTO {{ quarto.numero }}</div>
+        <i class="fas fa-trash-alt"
+        (click)="openConfirmModal(quarto.id, quarto.numero)"
+        ></i>
+      </div>
+      <div class="card-body-container">
+        <div class="card-subtitle"
+             [ngStyle]="{
+               'color': quarto.status === 'LIBERADO' ? 'rgb(5, 187, 5)' : 
+                         quarto.status === 'OCUPADO' ? 'rgb(187, 5, 5)' : 
+                         quarto.status === 'USADO' ? 'rgb(204, 204, 0)' : ''
+             }">
+           {{ quarto.status }}
+        </div>
+        <div class="card-icons">
+          <i class="fas fa-bed" (click)="openReserveModal(quarto.id)" [ngClass]="{'disabled-icon': quarto.status !== 'LIBERADO'}"></i>
+          <i class="fas fa-clock" (click)="liberarQuarto(quarto)" [ngClass]="{'disabled-icon': quarto.status !== 'OCUPADO'}"></i>
+          <i class="fas fa-broom" (click)="limparQuarto(quarto)" [ngClass]="{'disabled-icon': quarto.status !== 'USADO'}"></i>
+        </div>
+        
+        
+        <div class="card-body">ANDAR: {{ quarto.andar }}º</div>
+        <div class="card-body">CAPACIDADE: {{ quarto.capacidade }} PESSOAS</div>
+        <div class="card-body" *ngIf="quarto.refrigerado">COM AR CONDICIONADO</div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+<!-- Modal -->
+<div id="reservaModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Reservar quarto</h2>
+        <span class="close" (click)="closeReserveModal('reservaModal')">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form class="example-form" (submit)="criarReserva()" #reservaForm="ngForm">
+          <mat-form-field class="example-full-width">
+            <input matInput type="date" placeholder="Data de início" required [(ngModel)]="inicioReserva" name="inicio">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <input matInput type="date" placeholder="Data de fim" required [(ngModel)]="fimReserva" name="fim">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Hóspede</mat-label>
+            <mat-select placeholder="Selecione um hóspede" required [(ngModel)]="hospedeId" name="hospedeId">
+              <mat-option *ngFor="let hospede of hospedesCadastros" [value]="hospede.id">{{ hospede.nome }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- <mat-form-field class="example-full-width">
+            <mat-label>Quarto</mat-label>
+            <mat-select placeholder="Selecione um quarto" required [(ngModel)]="quartoId" name="quartoId">
+              <mat-option *ngFor="let quarto of quartosDisponiveis" [value]="quarto.id">{{ quarto.numero }}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+          
+          <button mat-raised-button type="submit" form="reservaForm" (click)="criarReserva()" class="btn-confirm">Criar Reserva</button>
+        </form>
+        
+      </div>
+      <div class="modal-footer">
+        <!-- Rodapé do modal, se necessário -->
+      </div>
+    </div>
+  </div>
+
+  <div id="quartoModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Criar quarto</h2>
+        <span class="close" (click)="closeQuartoModal()">&times;</span>
+      </div>
+      <div class="modal-body-quarto">
+        <br>
+        <div class="form-image-container">
+          <!-- Formulário -->
+          <form class="example-form" (submit)="criarQuarto()" #quartoForm="ngForm">
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" placeholder="Número do quarto" required [(ngModel)]="numeroQuarto" name="numeroQuarto">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" placeholder="Andar do quarto" required [(ngModel)]="andarQuarto" name="andarQuarto">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+              <input matInput type="number" placeholder="Capacidade do quarto" required [(ngModel)]="capacidadeQuarto" name="capacidadeQuarto">
+            </mat-form-field>
+            <mat-checkbox class="example-full-width" style="margin-top: 10px;" [(ngModel)]="refrigerado" name="refrigerado">Refrigerado</mat-checkbox>
+          </form>
+          
+          <!-- Imagem -->
+          <div class="image-container">
+            <img src="assets/criar-quarto.png" alt="Imagem do quarto" class="quarto-imagem">
+          </div>
+        </div>
+  
+        <!-- Botão de Enviar -->
+        <div class="submit-button-container">
+          <button mat-raised-button class="btn-confirm" type="submit" (click)="criarQuarto()" form="quartoForm">Criar</button>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- Rodapé do modal, se necessário -->
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header-confirm">
+        <h2>Você tem certeza que deseja excluir o quarto {{ numeroQuartoExclusao }}?</h2>
+      </div>
+      <div class="modal-body">
+        <div class="btn-modal">
+          <button class="btn-confirm" (click)="deleteQuarto()">Confirmar</button>
+          <button class="btn-cancel" (click)="closeReserveModal('confirmModal')">Cancelar</button>
+        </div>
+        
+        
+      </div>
+      <div class="modal-footer">
+        <!-- Rodapé do modal, se necessário -->
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
